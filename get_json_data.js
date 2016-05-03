@@ -1,10 +1,10 @@
 var http = require('http');
 
 var coubApi = {
-  "url": "http://coub.com/api/v2/",
-  "searchword": "all",
-  "order": "newest_popular",
-  "page": 1
+  url: "http://coub.com/api/v2/",
+  searchword: "all",
+  order: "newest_popular",
+  page: 1
 };
 
 var coubApiUrl = coubApi.url + "search?q=" + coubApi.searchword + "&order_by" + coubApi.order + "&page=" + coubApi.page; 
