@@ -1,18 +1,17 @@
 var http = require('http');
 
-function CoubApi(url, srchtxt, order, page) {
+function CoubApi(url) {
   this.url = url;
-  this.srchtxt = srchtxt;
-  this.order = order;
-  this.page = page;
-  this.getData = getData;
+  this.storage = [];
+  this.searchData = searchData;
+  this.storeData = storeData;
 }
 
-function getData() {
-  var url = this.url+"search?q="+
-            this.srchtxt+"&order_by="+
-            this.order+"&page="+
-            this.page;
+function searchData(searchtext, order, page) {
+  var url = this.url+
+            "search?q="+searchtext+
+            "&order_by="+order+
+            "&page="+page;
 
   http.get(url, function (res) {
     var body = '';
@@ -22,8 +21,7 @@ function getData() {
     });
 
     res.on('end', function () {
-      var coubHot = JSON.parse(body);
-      console.log(coubHot);
+      storeData(JSON.parse(body));
     });
 
   }).on('error', function (err) {
@@ -31,5 +29,12 @@ function getData() {
   });
 }
 
-var coub = new CoubApi("http://coub.com/api/v2/", "cat", "newest_popular", 1);
-coub.getData();
+function storeData(data) {
+  var i;
+  for(i = 0; i < 10; i++) {
+    this.storage.push(data.coubs[i]);
+  }
+}
+
+var coub = new CoubApi("http://coub.com/api/v2/");
+coub.searchData("cat", "newest_popular", 1);
