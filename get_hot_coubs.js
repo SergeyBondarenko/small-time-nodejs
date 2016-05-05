@@ -9,20 +9,38 @@ function CoubApi (url) {
 }
 
 function httpReq (url) {
-  http.get(url, function (res) {
-    var data = '';
-    
-    res.on('data', function (chunk) {
-      data += chunk;
+  var promise = new Promise (function (resolve, reject) {
+
+    http.get(url, function (res) {
+      var data = '';
+      
+      res.on('data', function (chunk) {
+        data += chunk;
+      });
+
+      res.on('end', function () {
+        if(data.length > 0) {
+          resolve(JSON.parse(data));
+        } else {
+          reject("HTTP request rejected!");
+        }
+      });
+
+    }).on('error', function (err) {
+      console.log("Error: ", e);
     });
 
-    res.on('end', function () {
-      this.storeData(JSON.parse(data)); 
-    });
-
-  }).on('error', function (err) {
-    console.log("Error: ", e);
   });
+
+  return promise;
+}
+
+function storeData (data) {
+  var i;
+  console.log("Storrrreee");
+  for(i = 0; i < 10; i++) {
+    this.storage.push(data.coubs[i]);
+  }
 }
 
 function searchData (searchtext, order, page) {
@@ -30,14 +48,10 @@ function searchData (searchtext, order, page) {
             "search?q="+searchtext+
             "&order_by="+order+
             "&page="+page;
-  this.httpReq(url);
-}
 
-function storeData (data) {
-  var i;
-  for(i = 0; i < 10; i++) {
-    this.storage.push(data.coubs[i]);
-  }
+  this.httpReq(url).then(function (data) {
+    this.storeData(data);
+  });
 }
 
 var coub = new CoubApi("http://coub.com/api/v2/");
