@@ -22,7 +22,7 @@ function httpReq (url) {
         if(data.length > 0) {
           resolve(JSON.parse(data));
         } else {
-          reject("HTTP request rejected!");
+          reject("Error: HTTP request rejected!");
         }
       });
 
@@ -39,8 +39,10 @@ function storeData (data) {
   var i;
   console.log("Storrrreee");
   for(i = 0; i < 10; i++) {
-    this.storage.push(data.coubs[i]);
+    this.storage.push(data.coubs[i].id);
   }
+
+  console.log(this.storage);
 }
 
 function searchData (searchtext, order, page) {
@@ -51,10 +53,9 @@ function searchData (searchtext, order, page) {
 
   this.httpReq(url).then(function (data) {
     this.storeData(data);
-  });
+  }.bind(this));
 }
 
 var coub = new CoubApi("http://coub.com/api/v2/");
 coub.searchData("cat", "newest_popular", 1);
-console.log(coub.storage);
 
