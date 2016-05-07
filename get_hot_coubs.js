@@ -46,10 +46,11 @@ function storeData (data) {
   console.log(this.storage.length);
 }
 
-function searchData (searchtext, order, page) {
+function searchData (searchtext, order, page, number) {
   var url = this.url +
             "search?q=" + searchtext +
             "&order_by=" + order +
+            "&per_page=" + number + 
             "&page=" + page;
 
   this.httpReq(url).then(function (data) {
@@ -71,7 +72,6 @@ function getHotData (order, page, number) {
 var coub = new CoubApi("http://coub.com/api/v2/");
 var i;
 for(i = 0; i < 10; i++) {
-  //coub.searchData("cat", "newest_popular", i);
   coub.getHotData("newest_popular", i, 10);
 }
 
